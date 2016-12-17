@@ -1,0 +1,28 @@
+package test;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Klasa {
+
+    public static void main(String[] args) throws Exception {
+        
+       
+    }
+    
+    public void run() throws Exception{
+    	ServerSocket serverSocket = new ServerSocket(444);
+    	Socket sock = serverSocket.accept();
+    	InputStreamReader ir = new InputStreamReader(sock.getInputStream());
+    	BufferedReader br = new BufferedReader(ir);
+    	
+    	String message = br.readLine();
+    	System.out.println(message);
+    	
+    	if (message != null){
+    		PrintStream ps = new PrintStream(sock.getOutputStream());
+    		ps.println('Jest wiadomosc');
+    	}
+    }
+}

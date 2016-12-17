@@ -1,0 +1,34 @@
+package test;
+
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Klasa {
+
+    public static void main(String[] args) throws Exception{
+        Klasa server = new Klasa();
+        server.run();
+       
+    }
+    
+    public void run() throws Exception{
+    	System.out.println("Running!!");
+    	ServerSocket serverSocket = new ServerSocket();
+    	serverSocket.setReuseAddress(true);
+    	serverSocket.bind(new InetSocketAddress(12345));
+    	Socket sock = serverSocket.accept();
+    	InputStreamReader ir = new InputStreamReader(sock.getInputStream());
+    	BufferedReader br = new BufferedReader(ir);
+    	
+    	
+    	String message = br.readLine();
+    	System.out.println(message);
+    	
+    	if (message != null){
+    		PrintStream ps = new PrintStream(sock.getOutputStream());
+    		ps.println("Jest wiadomosc");
+    	}
+    }
+}

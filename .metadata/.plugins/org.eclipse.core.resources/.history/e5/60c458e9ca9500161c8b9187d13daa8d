@@ -1,0 +1,45 @@
+package sqrt;
+//pierwiastek n stopnia metoda Newtona
+public class mySqrt {
+
+	public static void main(String[] args) {
+		/*int n = Integer.parseInt(args[0]);
+		double number = Double.parseDouble(args[1]);
+		double dopEpsilon = 0.01; 
+		double x = sqrt(number, n, dopEpsilon);
+		System.out.println("sqrt(" + number + "," + n + ") = " + x);
+		System.out.println("With precision: " + dopEpsilon);*/
+		System.out.println(pow(2, 4));
+	}
+	
+	private static double sqrt(double number, int n, double dopEpsilon){
+		double x = number;
+		double epsilon = abs(number - pow(x, n));
+		while(epsilon >= dopEpsilon){
+			x = (1./n)*((n-1.)*x + (number/pow(x, n-1)));
+			epsilon = abs(number - pow(x, n));
+		}
+		return x;
+	}
+	
+	private static double pow(double number, int n){
+		double output = number;
+		/*for(int i = 0; i < n ; i++){
+			output *= number;
+		}
+		return output;*/
+		double tmp = 2;
+		while(tmp <= n){
+			number *= number;
+			tmp *= tmp;
+		}
+		return number;
+	}
+	
+	private static double abs(double number) {
+		if(number >= 0.){
+			return number;
+		}
+		return number * -1;
+	}
+}
