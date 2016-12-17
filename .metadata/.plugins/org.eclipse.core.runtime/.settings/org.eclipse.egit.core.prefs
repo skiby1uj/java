@@ -1,5 +1,5 @@
-GitRepositoriesView.GitDirectories=
-GitRepositoriesView.GitDirectories.relative=
+GitRepositoriesView.GitDirectories=/home/grzegorz/workout_eclipse/.git\:/home/grzegorz/workout_eclipse/java/.git\:
+GitRepositoriesView.GitDirectories.relative=.git\:java/.git\:
 core_defaultRepositoryDir=/home/grzegorz/workout_eclipse
 core_preferredMergeStrategy=jgit-default-mergeStrategy
 eclipse.preferences.version=1

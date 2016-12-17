@@ -1,0 +1,204 @@
+package ticTacToe;
+
+
+import javax.swing.*;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.io.Console;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ticTacToe extends JFrame {
+
+    static boolean canGo;
+    static Socket socket;
+    static int countAlreadySet;
+    static int size;
+    static ButtonXO[][] buttons;
+    static int ileWygrywa;
+    
+    class ButtonXO extends JButton implements ActionListener {
+        int buttonIDX;
+        int buttonIDY;
+
+        public ButtonXO(int idX, int idY) {
+            buttonIDX = idX;
+            buttonIDY = idY;
+            this.setFont(new Font("Dialog", Font.BOLD, 13));
+            this.addActionListener(this);
+        }
+
+        //naciskamy na button
+        public void actionPerformed(ActionEvent e) {
+            
+            if (this.getText() != "") return;
+            
+            try {
+            	setText("X");
+            	countAlreadySet ++;
+                OutputStream os = socket.getOutputStream();
+                os.write(buttonIDX);
+                os.write(buttonIDY);
+                determineIfWin();
+                InputStream is = socket.getInputStream();
+                int buttonReadX = is.read();
+                int buttonReadY = is.read();
+                
+                buttons[buttonReadX][buttonReadY].setText("O");
+                countAlreadySet ++;
+                determineIfWin();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
+    }
+    
+    JPanel p = new JPanel();
+    
+    public ticTacToe(int wielkosc, int ileWygrywa){
+        super("XO Game");
+        this.countAlreadySet = 0;
+        this.ileWygrywa = ileWygrywa;
+        this.size = wielkosc;
+        this.buttons = new ButtonXO[size][size];
+        setSize(900,900);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        p.setLayout(new GridLayout(size,size));
+        System.out.println(size);
+        for(int i=0;i<size;i++){
+        	for(int j=0; j<size; j++){
+        		buttons[i][j] = new ButtonXO(i, j);
+                p.add(buttons[i][j]);
+        	}
+        }
+        add(p);
+        setVisible(true);
+    }
+
+    private void Wins(String whoWins) {
+        JOptionPane.showMessageDialog(this,
+        		(whoWins+" wins"),
+                "Winner",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    protected String win(int ilosc){
+    	for(int i=0; i < size;i++){
+    		for(int j=0;j<size;j++){
+    			if(buttons[i][j].getText() != ""){
+    				
+    				//************POZIOM*********************
+    				String charset = buttons[i][j].getText();
+    				int ileKoloSiebie = 1;
+    				int tmp = j+1;
+    				while(i < size && tmp < size && ileKoloSiebie < ilosc){
+    					if (charset.equals(buttons[i][tmp].getText())){
+    						ileKoloSiebie++;
+    					}
+    					tmp++;
+    				}
+    				if(ileKoloSiebie==ilosc){
+    					return charset;
+    				}
+    				
+    				//*************PION***************************
+    				charset = buttons[i][j].getText();
+    				ileKoloSiebie = 1;
+    				tmp = i+1;
+    				while(j < size && tmp < size && ileKoloSiebie < ilosc){
+    					if (charset.equals(buttons[tmp][j].getText())){
+    						ileKoloSiebie++;
+    					}
+    					tmp++;
+    				}
+    				if(ileKoloSiebie==ilosc){
+    					return charset;
+    				}
+    				
+    				//************UKOS*PRAWO**********************
+    				charset = buttons[i][j].getText();
+    				ileKoloSiebie = 1;
+    				tmp = i+1;
+    				int tmp2 = j+1;
+    				while(tmp < size && tmp2 < size && ileKoloSiebie < ilosc){
+    					if (charset.equals(buttons[tmp][tmp2].getText())){
+    						ileKoloSiebie++;
+    					}
+    					tmp++;
+    					tmp2++;
+    				}
+    				if(ileKoloSiebie==ilosc){
+    					return charset;
+    				}
+    				
+    				//************UKOS*LEWO**********************
+    				charset = buttons[i][j].getText();
+    				ileKoloSiebie = 1;
+    				tmp = i-1;
+    				tmp2 = j+1;
+    				while(tmp >= 0 && tmp2 < size && ileKoloSiebie < ilosc){
+    					if (charset.equals(buttons[tmp][tmp2].getText())){
+    						ileKoloSiebie++;
+    					}
+    					tmp--;
+    					tmp2++;
+    				}
+    				if(ileKoloSiebie==ilosc){
+    					return charset;
+    				}
+    			}
+    		}
+    	}
+    	return null;
+    }
+
+    private void determineIfWin() {
+    	
+    	String whoWin = win(this.ileWygrywa);
+    	if(whoWin != null){
+    		Wins(whoWin);
+    		resetGame();
+    	}
+    	else if (countAlreadySet >= (size*size)) {
+            JOptionPane.showMessageDialog(this,
+                    "Draw!",
+                    "Winner",
+                    JOptionPane.INFORMATION_MESSAGE);
+            resetGame();
+        }
+    }
+
+    private void resetGame() {
+    	countAlreadySet=0;
+        for(int i=0;i<size;i++){
+        	for(int j = 0; j < size; j++){
+        		buttons[i][j].setText("");
+        	}
+        }
+    }
+
+    public static void main(String[] args) throws IOException{
+        new ticTacToe(20, 5);
+        if(args.length == 0)
+        {
+            ServerSocket ss = new ServerSocket(5000);
+            socket = ss.accept();
+            InputStream is = socket.getInputStream();
+            int buttonReadX = is.read();
+            int buttonReadY = is.read();
+            buttons[buttonReadX][buttonReadY].setText("O");
+            countAlreadySet++;
+        }
+        else
+        {
+            socket = new Socket(args[0], 5000);
+        }
+    }
+}
