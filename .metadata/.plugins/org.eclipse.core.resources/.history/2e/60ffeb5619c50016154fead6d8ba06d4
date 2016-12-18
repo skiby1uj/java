@@ -1,0 +1,56 @@
+package test;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="pozycja")
+class Dane{
+	@XmlAttribute(name="wiek")
+	int wiek;
+	@XmlAttribute(name="imie")
+	String imie;
+	
+	public Dane(){}
+	
+	public Dane(int wiek, String imie){
+		this.wiek = wiek;
+		this.imie = imie;
+	}
+	
+	@XmlAttribute(name="wiek")
+	public int getWiek(){
+		return wiek;
+	}
+	
+	@XmlAttribute(name="imie")
+	public String getImie(){
+		return imie;
+	}
+}
+
+
+public class Klasa {
+	
+    public static void main(String[] args) throws JAXBException{
+    	Dane dane[] = new Dane[1];
+    	dane[0] = new Dane(12, "Zosia");
+    	try{
+    		JAXBContext jaxbContext = JAXBContext.newInstance(Dane.class);
+    		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            
+			jaxbMarshaller.marshal(dane[0], System.out);
+    	}
+    	catch (Exception e) {
+			System.out.println(e);
+		}
+        
+        
+        
+    }
+    
+    
+}

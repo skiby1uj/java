@@ -2,55 +2,30 @@ package ticTacToe;
 
 
 import javax.swing.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ticTacToe extends JFrame {
 
-    static boolean canGo;
+
+
+public class ticTacToe extends JFrame {
     static Socket socket;
     static int countAlreadySet;
     static int size;
     static ButtonXO[][] buttons;
     static int ileWygrywa;
-    
-    class ButtonSave extends JButton implements ActionListener{
-    	boolean isZapisz;
-    	JButton button;
-    	
-    	public ButtonSave(boolean isZapisz) {
-			this.isZapisz = isZapisz;
-			if(isZapisz == true){
-				button = new JButton("Zapisz");
-			}
-			else {
-				button = new JButton("Zaladuj");
-			}
-			button.addActionListener(this);
-		}
-    	
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(this.isZapisz == true){
-				System.out.println("Zapisuje!!!");
-			}
-			else{
-				System.out.println("Czytam!!!");
-			}
-			
-			
-		}
-    	
-    }
     
     class ButtonXO extends JButton implements ActionListener {
         int buttonIDX;
@@ -89,7 +64,8 @@ public class ticTacToe extends JFrame {
         }
     }
     
-    JPanel p = new JPanel();
+    
+    JPanel panel = new JPanel();
     JPanel subPanel = new JPanel();
     
     public ticTacToe(int wielkosc, int ileWygrywa){
@@ -109,12 +85,11 @@ public class ticTacToe extends JFrame {
         		subPanel.add(buttons[i][j]);
         	}
         }
-        p.setLayout(new BorderLayout());
-        p.add(subPanel);
-        p.add(new ButtonSave(true).button, BorderLayout.EAST);
+        panel.setLayout(new BorderLayout());
+        panel.add(subPanel);
+        panel.add(new ButtonSave(true).button, BorderLayout.EAST);
         
-        add(p);
-//        add(new JButton());
+        add(panel);
         setVisible(true);
     }
 

@@ -1,0 +1,74 @@
+package test;
+
+import java.awt.List;
+import java.util.ArrayList;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="pozycja")
+class Dane{
+	@XmlAttribute(name="wiek")
+	int wiek;
+	@XmlAttribute(name="imie")
+	String imie;
+	
+	public Dane(){}
+	
+	public Dane(int wiek, String imie){
+		this.wiek = wiek;
+		this.imie = imie;
+	}
+	
+//	@XmlAttribute(name="wiek")
+//	public int getWiek(){
+//		return wiek;
+//	}
+//	
+//	@XmlAttribute(name="imie")
+//	public String getImie(){
+//		return imie;
+//	}
+}
+
+@XmlRootElement(name="tablica")
+class Table{
+	ArrayList<Dane> dane = new ArrayList<Dane>();
+	
+	public Table(){}
+	
+	public void addData(Dane dane) {
+		this.dane.add(dane);
+	}
+	
+}
+
+
+public class Klasa {
+	
+    public static void main(String[] args) throws JAXBException{
+    	
+    	Table tab = new Table();
+    	tab.addData(new Dane(12, "Ala"));
+    	
+    	try{
+    		JAXBContext jaxbContext = JAXBContext.newInstance(Table.class);
+    		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+			jaxbMarshaller.marshal(tab, System.out);
+//			jaxbMarshaller.marshal(dane[1], System.out);
+    	}
+    	catch (Exception e) {
+			System.out.println(e);
+		}
+        
+        
+        
+    }
+    
+    
+}

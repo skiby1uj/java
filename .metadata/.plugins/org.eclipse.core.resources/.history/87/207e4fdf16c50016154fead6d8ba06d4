@@ -1,0 +1,33 @@
+package test;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+class Dane{
+	int wiek;
+	String imie;
+	
+	public Dane(int wiek, String imie){
+		this.wiek = wiek;
+		this.imie = imie;
+	}
+}
+
+
+public class Klasa {
+
+	static Dane dane = new Dane(12, "Zosia");
+	
+    public static void main(String[] args) throws JAXBException{
+    	JAXBContext jaxbContext = JAXBContext.newInstance(Dane.class);
+        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        
+        jaxbMarshaller.marshal(dane, System.out);
+        
+        
+    }
+    
+    
+}
